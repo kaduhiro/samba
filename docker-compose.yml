@@ -1,0 +1,22 @@
+version: '3'
+ 
+services:
+  samba:
+    image: ghcr.io/servercontainers/samba
+    network_mode: host
+    environment:
+      SAMBA_CONF_LOG_LEVEL: 3
+
+      GROUP_samba: 1000
+
+      ACCOUNT_user: "user:1000:XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX:8846F7EAEE8FB117AD06BDD830B7586C:[U          ]:LCT-642009FD:" # user:password
+      UID_user: 1000
+      GROUPS_user: samba
+
+      SAMBA_VOLUME_CONFIG_public:  "[Public];  path=/public;  inherit permissions = yes; browseable = yes; read only = no;                     guest ok = yes;"
+      SAMBA_VOLUME_CONFIG_private: "[Private]; path=/private; inherit permissions = yes; browseable = no;  read only = no; valid users = user; guest ok = no; "
+    volumes:
+      - ./public:/public
+      - ./private:/private
+    restart: always
+    working_dir: /container
